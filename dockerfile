@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # Copy the JAR file from the build stage
-COPY /app/target/*.jar app.jar
+COPY /var/jenkins_home/workspace/jen-new-noel/target/*.jar app.jar
 
 # Expose the application's port (change 8080 if your app runs on a different port)
 EXPOSE 8081
