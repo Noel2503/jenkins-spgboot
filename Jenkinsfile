@@ -73,7 +73,7 @@ pipeline {
         stage('Apply Kubernetes YAML') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-                    sh "kubectl apply -f ${deployment_file} -n noelspg"
+                    sh "kubectl replace -f ${deployment_file} -n noelspg"
                 }
             }
         }
