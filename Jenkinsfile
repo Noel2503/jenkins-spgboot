@@ -58,7 +58,7 @@ pipeline {
         }
         stage('Update Deployment file to GitHub') {
             steps {
-                withCredentials([string(credentialsId: 'git_token', variable: 'git_token_test')]) {
+                withCredentials([string(credentialsId: 'git-spgboot', variable: 'git_token_test')]) {
                     sh '''
                         git config --global user.name "Noel2503"
                         git config --global user.email "noelyesuraj25@gmail.com"
