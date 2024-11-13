@@ -22,7 +22,7 @@ spec:
     protocol: TCP
     targetPort: 3000
   selector:
-    app: sample-app
+    app: sprgboot-app
   sessionAffinity: None
   type: ClusterIP
 status:
