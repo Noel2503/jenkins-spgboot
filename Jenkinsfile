@@ -78,10 +78,10 @@ pipeline {
                 }
             }
         }
-        stage('Verify Deployment') {
+        stage('Apply Kubernetes YAML') {
             steps {
-                script {
-                    sh 'kubectl rollout status deployment/my-deployment'
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh "kubectl apply -f ${deployment_file} -n noelapp"
                 }
             }
         }
