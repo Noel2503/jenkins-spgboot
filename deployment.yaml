@@ -34,7 +34,7 @@ spec:
         imagePullPolicy: Always
         name: sprgboot-app
         ports:
-        - containerPort: 3001
+        - containerPort: 8090
           protocol: TCP
         resources: {}
         terminationMessagePath: /dev/termination-log
