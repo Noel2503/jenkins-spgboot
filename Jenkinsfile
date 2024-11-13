@@ -21,6 +21,7 @@ pipeline {
         stage('Build with Maven') {
             steps {
                 script {
+                    sh "chmod 755 https://github.com/Noel2503/jenkins-spgboot/blob/main/mvnw"
                     sh "./mvnw clean package" // Run Maven clean package to build the JAR/WAR file
                 }
             }
