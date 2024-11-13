@@ -69,15 +69,6 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    withCredentials([file(credentialsId: kubeconfig, variable: 'KUBECONFIG')]) {
-                        sh 'kubectl apply -f ${deployment_file} -n noelapp'
-                    }
-                }
-            }
-        }
         stage('Apply Kubernetes YAML') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
