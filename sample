@@ -9,10 +9,12 @@ pipeline {
     }
     agent any
     stages {
-        stage('Apply Kubernetes files') {
-           withKubeConfig([credentialsId: 'kubeconfig', serverUrl: '100.96.44.203']) {
-           sh 'kubectl apply -f ${deployment_file} -n noelapp'
-         }
-       }
-    }
+        stage('Apply Kubernetes YAML') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh "kubectl apply -f ${deployment_file} -n noelapp"
+                }
+            }
+        }
+     }
 }
