@@ -30,7 +30,7 @@ spec:
         app: sprgboot-app
     spec:
       containers:
-      - image: noel135/img-repo:19
+      - image: noel135/img-repo:20
         imagePullPolicy: Always
         name: sprgboot-app
         ports:
