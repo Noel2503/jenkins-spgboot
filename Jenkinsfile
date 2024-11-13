@@ -74,7 +74,6 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                     sh "kubectl apply -f ${deployment_file} -n noelspg"
-                    sh "kubectl apply -f ${service_file} -n noelspg"
                 }
             }
         }
