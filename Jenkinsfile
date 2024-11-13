@@ -5,6 +5,7 @@ pipeline {
         dockerImage = ''
         docker_version = "${BUILD_NUMBER}"
         deployment_file = "${WORKSPACE}/deployment.yaml"
+        service_file = "${WORKSPACE}/service.yaml"
         KUBECONFIG_CREDENTIAL_ID = 'kubeconfig' // Define this
     }
     agent any
@@ -73,6 +74,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                     sh "kubectl apply -f ${deployment_file} -n noelspg"
+                    sh "kubectl apply -f ${service_file} -n noelspg"
                 }
             }
         }
