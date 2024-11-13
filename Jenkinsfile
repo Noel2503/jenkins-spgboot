@@ -5,7 +5,7 @@ pipeline {
         dockerImage = ''
         docker_version = "${BUILD_NUMBER}"
         deployment_file = "${WORKSPACE}/deployment.yaml"
-        KUBECONFIG_CREDENTIAL_ID = 'kubeconfig-credential' // Define this
+        KUBECONFIG_CREDENTIAL_ID = 'kubeconfig' // Define this
     }
     agent any
     stages {
