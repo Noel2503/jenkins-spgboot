@@ -8,7 +8,7 @@ metadata:
   creationTimestamp: "2024-11-12T07:22:32Z"
   generation: 1
   name: sprgboot-app
-  namespace: noelapp
+  namespace: noelspg
   resourceVersion: "382483811"
   uid: 0d5c024f-da26-4204-a6c8-77a0ac37b370
 spec:
