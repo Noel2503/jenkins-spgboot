@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-java-app
+spec:
+  selector:
+    app: my-app
+  ports:
+    - protocol: TCP
+      port: 80        # Port that the service will expose inside the cluster
+      targetPort: 8080 # Port on the pod where the application is running
+  clusterIP: None # Optional, set to None if you want to create a headless service (no IP assigned)
+  type: ClusterIP # This is the default service type
