@@ -5,7 +5,7 @@ metadata:
   namespace: noelapp
 spec:
   selector:
-    app: sprgboot-app
+    app: javaapp
   ports:
     - protocol: TCP
       port: 80        # Port that the service will expose inside the cluster
