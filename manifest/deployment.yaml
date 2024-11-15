@@ -30,7 +30,7 @@ spec:
         app: javaapp
     spec:
       containers:
-      - image: noel135/img-repo:24
+      - image: kranbupriyan/my-javaapp:v1
         imagePullPolicy: Always
         name: my-java-con
         ports:
