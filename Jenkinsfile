@@ -73,8 +73,8 @@ pipeline {
         stage('Apply Kubernetes YAML') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-                    sh "kubectl delete -f ${deployment_file} -n noelspg"
-                    sh "kubectl apply -f ${deployment_file} -n noelspg"
+                    sh "kubectl delete -f ${deployment_file} -n noel-tomcat"
+                    sh "kubectl apply -f ${deployment_file} -n noel-tomcat"
                 }
             }
         }
