@@ -90,7 +90,7 @@ spec:
     protocol: TCP
     targetPort: 8090
   selector:
-    app: sprgboot-app
+    app: sprgboot-tomcat
   sessionAffinity: None
   type: ClusterIP
 status:
@@ -135,7 +135,7 @@ metadata:
   uid: 357c3490-3ca8-4a7c-a050-c9f0c32959f2
 spec:
   gateways:
-  - noelspggw
+  - noeltomcatgw
   hosts:
   - tomcatapp.com
   http:
