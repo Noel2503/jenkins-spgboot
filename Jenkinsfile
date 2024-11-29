@@ -6,7 +6,9 @@ pipeline {
         docker_version = "${BUILD_NUMBER}"
         deployment_file = "${WORKSPACE}/deployment.yaml"
         service_file = "${WORKSPACE}/service.yaml"
-        KUBECONFIG_CREDENTIAL_ID = 'kubeconfig' // Define this
+        KUBECONFIG_CREDENTIAL_ID = 'kubeconfig'
+        SCANNER_HOME = tool 'sonar-scanner'
+        TRIVY_SERVER = "http://trivy-server.trivy.svc.cluster.local:4954"
     }
     agent any
     stages {
@@ -27,11 +29,36 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh '''
+                        $SCANNER_HOME/bin/sonar-scanner \
+                        -Dsonar.projectName=noel-spg \
+                        -Dsonar.java.binaries=. \
+                        -Dsonar.projectKey=noel-spg
+                    '''
+                }
+            }
+        }
         stage('Building our image') {
             steps {
                 script {
                     dockerImage = docker.build registry + ":$docker_version"
                 }
+            }
+        }
+        stage('Trivy Scan') {
+            steps {
+                script {
+                    // Scan the Docker image with Trivy
+                    sh "trivy client --remote ${TRIVY_SERVER} ${registry}:${docker_version} > trivy-scan-report.txt"
+                }
+            }
+        }
+		stage('Archive Trivy Report') {
+            steps {
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'trivy-scan-report.txt'
             }
         }
         stage('Push Docker Image') {
