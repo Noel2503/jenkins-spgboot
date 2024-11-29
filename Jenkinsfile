@@ -72,9 +72,20 @@ pipeline {
         }
         stage('Apply Kubernetes YAML') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-                    sh "kubectl delete -f ${deployment_file} -n noel-tomcat"
-                    sh "kubectl apply -f ${deployment_file} -n noel-tomcat"
+                script {
+                       // Check if the deployment file exists
+                    if (fileExists("${deployment_file}")) {
+                        echo "Deployment file found. Deleting and applying file"
+
+                        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                        // Delete and apply the Kubernetes YAML
+                        sh "kubectl delete -f ${deployment_file} -n noel-tomcat"
+                        sh "kubectl apply -f ${deployment_file} -n noel-tomcat"
+                        }
+                    } else {
+                          error "Deployment file not found. Applying."
+                          sh "kubectl apply -f ${deployment_file} -n noel-tomcat"
+                      }
                 }
             }
         }
