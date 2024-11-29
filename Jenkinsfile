@@ -79,7 +79,7 @@ pipeline {
 
                         withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                         // Delete and apply the Kubernetes YAML
-                        sh "kubectl delete -f ${deployment_file} -n noel-tomcat"
+                        sh "kubectl delete -f ${deployment_file} -n noel-tomcat --ignore-not-found"
                         sh "kubectl apply -f ${deployment_file} -n noel-tomcat"
                         }
                     } else {
