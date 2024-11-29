@@ -78,9 +78,9 @@ metadata:
   resourceVersion: "381473300"
   uid: 27d26d6f-1e54-4b1b-a2e1-73fd6692f0a6
 spec:
-  clusterIP: 10.245.13.64
+  clusterIP: 10.245.13.66
   clusterIPs:
-  - 10.245.13.64
+  - 10.245.13.66
   internalTrafficPolicy: Cluster
   ipFamilies:
   - IPv4
