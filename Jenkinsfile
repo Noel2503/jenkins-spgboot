@@ -36,7 +36,7 @@ pipeline {
         stage('Deploying the application') {
             steps {
                 script {
-                      echo "Deploying to ${ENVIRONMENT} environment..."
+                      echo "Deploying to ${params.ENVIRONMENT} environment..."
                     if (ENVIRONMENT == 'dev') {
                         sh "scp target/*.jar kubecaas@100.96.44.207:${DEPLOY_PATH}"
                     } else if (ENVIRONMENT == 'staging') {
