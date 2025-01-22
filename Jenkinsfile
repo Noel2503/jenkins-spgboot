@@ -7,7 +7,8 @@ pipeline {
         deployment_file = "${WORKSPACE}/newdeployment.yaml"
         service_file = "${WORKSPACE}/service.yaml"
         KUBECONFIG_CREDENTIAL_ID = 'kubeconfig' 
-        DEPLOY_PATH = "${WORKSPACE}/newdeployment.yaml" 
+        DEPLOY_PATH = "${WORKSPACE}/newdeployment.yaml"
+	sshpasswd= "Zn+TEfX94/p2" 
 
     }
     agent any
@@ -39,11 +40,11 @@ pipeline {
                       sh "chmod 777  ${WORKSPACE}/target/*.jar"
                       echo "Deploying to ${params.ENVIRONMENT} environment..."
                     if (ENVIRONMENT == 'dev') {
-                        sh "sshpass -p "Zn+TEfX94/p2" scp -o StrictHostKeyChecking=no -r target/*.jar caasops@100.96.44.207:${DEPLOY_PATH}"
+                        sh "sshpass -p "${sshpasswd}" scp -o StrictHostKeyChecking=no -r target/*.jar caasops@100.96.44.207:${DEPLOY_PATH}"
                     } else if (ENVIRONMENT == 'staging') {
-                        sh "sshpass -p "Zn+TEfX94/p2" scp -o StrictHostKeyChecking=no -r target/*.jar caasops@100.96.44.205:${DEPLOY_PATH}"
+                        sh "sshpass -p "{sshpasswd}" scp -o StrictHostKeyChecking=no -r target/*.jar caasops@100.96.44.205:${DEPLOY_PATH}"
                     } else if (ENVIRONMENT == 'prod') {
-                        sh " sshpass -p "Zn+TEfX94/p2" scp -o StrictHostKeyChecking=no -r target/*.jar caasops@100.96.44.203:${DEPLOY_PATH}"
+                        sh " sshpass -p "{sshpasswd}" scp -o StrictHostKeyChecking=no -r target/*.jar caasops@100.96.44.203:${DEPLOY_PATH}"
                     }
                 }
             }
