@@ -36,13 +36,14 @@ pipeline {
         stage('Deploying the application') {
             steps {
                 script {
+                      sh "chmod 777  ${WORKSPACE}/target/*.jar"
                       echo "Deploying to ${params.ENVIRONMENT} environment..."
                     if (ENVIRONMENT == 'dev') {
-                        sh "scp -o StrictHostKeyChecking=no target/*.jar caasops@100.96.44.207:${DEPLOY_PATH}"
+                        sh "sshpass -p "Zn+TEfX94/p2" scp -o StrictHostKeyChecking=no -r target/*.jar caasops@100.96.44.207:${DEPLOY_PATH}"
                     } else if (ENVIRONMENT == 'staging') {
-                        sh "scp -o StrictHostKeyChecking=no target/*.jar caasops@100.96.44.205:${DEPLOY_PATH}"
+                        sh "sshpass -p "Zn+TEfX94/p2" scp -o StrictHostKeyChecking=no -r target/*.jar caasops@100.96.44.205:${DEPLOY_PATH}"
                     } else if (ENVIRONMENT == 'prod') {
-                        sh "scp -o StrictHostKeyChecking=no target/*.jar caasops@100.96.44.203:${DEPLOY_PATH}"
+                        sh " sshpass -p "Zn+TEfX94/p2" scp -o StrictHostKeyChecking=no -r target/*.jar caasops@100.96.44.203:${DEPLOY_PATH}"
                     }
                 }
             }
