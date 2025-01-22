@@ -38,11 +38,11 @@ pipeline {
                 script {
                       echo "Deploying to ${params.ENVIRONMENT} environment..."
                     if (ENVIRONMENT == 'dev') {
-                        sh "scp target/*.jar kubecaas@100.96.44.207:${DEPLOY_PATH}"
+                        sh "scp -o StrictHostKeyChecking=no target/*.jar kubecaas@100.96.44.207:${DEPLOY_PATH}"
                     } else if (ENVIRONMENT == 'staging') {
-                        sh "scp target/*.jar kubecaas@100.96.44.205:${DEPLOY_PATH}"
+                        sh "scp -o StrictHostKeyChecking=no target/*.jar kubecaas@100.96.44.205:${DEPLOY_PATH}"
                     } else if (ENVIRONMENT == 'prod') {
-                        sh "scp target/*.jar kubecaas@100.96.44.203:${DEPLOY_PATH}"
+                        sh "scp -o StrictHostKeyChecking=no target/*.jar kubecaas@100.96.44.203:${DEPLOY_PATH}"
                     }
                 }
             }
