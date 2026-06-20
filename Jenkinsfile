@@ -1,73 +1,91 @@
 pipeline {
-    environment {
-        registry = "noel135/img-repo"
-        registryCredential = 'docker-credential'
-        dockerImage = ''
-        docker_version = "${BUILD_NUMBER}"
-        deployment_file = "${WORKSPACE}/newdeployment.yaml"
-        service_file = "${WORKSPACE}/service.yaml"
-    }
-    agent any
-    parameters {
-        string(name: 'BRANCH', defaultValue: 'main', description: 'Branch to build')
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Deployment environment')
-    }
-    stages {
+agent any
 
-    stage('Cloning our Git') {
+```
+environment {
+    REGISTRY = "noel135/img-repo"
+    DEPLOYMENT_FILE = "deployment.yaml"
+}
+
+parameters {
+    string(name: 'BRANCH', defaultValue: 'main', description: 'Branch to build')
+    choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Deployment environment')
+}
+
+stages {
+
+    stage('Clone Repository') {
         steps {
             git(
                 url: 'https://github.com/Noel2503/jenkins-spgboot.git',
                 credentialsId: 'git-credential',
-                branch: 'main'
+                branch: "${params.BRANCH}"
             )
         }
     }
 
-    stage('Build with Maven') {
+    stage('Build Application') {
         steps {
-            sh "chmod +x mvnw"
-            sh "./mvnw clean package"
+            sh '''
+            chmod +x mvnw
+            ./mvnw clean package -DskipTests
+            '''
         }
     }
 
-    stage('Build and Push Image') {
-    steps {
-        sh '''
-        /kaniko/executor \
-          --dockerfile=Dockerfile \
-          --context=$WORKSPACE \
-          --destination=noel135/img-repo:${BUILD_NUMBER}
-        '''
+    stage('Build & Push Image') {
+        steps {
+            withCredentials([
+                usernamePassword(
+                    credentialsId: 'docker-credential',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )
+            ]) {
+                sh '''
+                mkdir -p /kaniko/.docker
+
+                cat > /kaniko/.docker/config.json <<EOF
+                {
+                  "auths": {
+                    "https://index.docker.io/v1/": {
+                      "auth": "$(echo -n $DOCKER_USER:$DOCKER_PASS | base64 | tr -d '\n')"
+                    }
+                  }
+                }
+                EOF
+
+                /kaniko/executor \
+                  --dockerfile=Dockerfile \
+                  --context=$WORKSPACE \
+                  --destination=noel135/img-repo:${BUILD_NUMBER} \
+                  --destination=noel135/img-repo:latest
+                '''
+            }
+        }
     }
-}
+
+    stage('Update Deployment YAML') {
+        steps {
+            sh '''
+            sed -i "s|image: noel135/img-repo:.*|image: noel135/img-repo:${BUILD_NUMBER}|g" ${DEPLOYMENT_FILE}
+
+            echo "Updated deployment file:"
+            grep image ${DEPLOYMENT_FILE}
+            '''
+        }
+    }
 }
 
-stage('Push Docker Image') {
-    steps {
-        withCredentials([
-            usernamePassword(
-                credentialsId: 'docker-credential',
-                usernameVariable: 'DOCKER_USER',
-                passwordVariable: 'DOCKER_PASS'
-            )
-        ]) {
-            sh """
-            echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
-            docker push noel135/img-repo:${BUILD_NUMBER}
-            docker tag noel135/img-repo:${BUILD_NUMBER} noel135/img-repo:latest
-            docker push noel135/img-repo:latest
-            """
-        }
+post {
+    success {
+        echo "Build ${BUILD_NUMBER} completed successfully"
+    }
+
+    failure {
+        echo "Build failed"
     }
 }
-	stage('Update Deployment YAML') {
-    steps {
-        script {
-            sh """
-            sed -i 's|image: noel135/sample:.*|image: noel135/sample:${BUILD_NUMBER}|g' deployment.yaml
-            """
-        }
-    }
-}
+```
+
 }
