@@ -71,4 +71,3 @@ stage('Push Docker Image') {
     }
 }
 }
-}
