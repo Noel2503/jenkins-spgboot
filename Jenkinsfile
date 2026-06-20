@@ -31,12 +31,16 @@ pipeline {
         }
     }
 
-    stage('Build Docker Image') {
+    stage('Build and Push Image') {
     steps {
-        sh """
-        docker build -t noel135/img-repo:${BUILD_NUMBER} .
-        """
+        sh '''
+        /kaniko/executor \
+          --dockerfile=Dockerfile \
+          --context=$WORKSPACE \
+          --destination=noel135/img-repo:${BUILD_NUMBER}
+        '''
     }
+}
 }
 
 stage('Push Docker Image') {
