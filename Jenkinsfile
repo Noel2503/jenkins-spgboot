@@ -32,23 +32,31 @@ pipeline {
     }
 
     stage('Build Docker Image') {
-        steps {
-            script {
-                dockerImage = docker.build("${registry}:${docker_version}")
-            }
-        }
+    steps {
+        sh """
+        docker build -t noel135/img-repo:${BUILD_NUMBER} .
+        """
     }
+}
 
-    stage('Push Docker Image') {
-        steps {
-            script {
-                docker.withRegistry('https://index.docker.io/v1/', registryCredential) {
-                    dockerImage.push()
-                    dockerImage.push('latest')
-                }
-            }
+stage('Push Docker Image') {
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'docker-credential',
+                usernameVariable: 'DOCKER_USER',
+                passwordVariable: 'DOCKER_PASS'
+            )
+        ]) {
+            sh """
+            echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin
+            docker push noel135/img-repo:${BUILD_NUMBER}
+            docker tag noel135/img-repo:${BUILD_NUMBER} noel135/img-repo:latest
+            docker push noel135/img-repo:latest
+            """
         }
     }
+}
 	stage('Update Deployment YAML') {
     steps {
         script {
