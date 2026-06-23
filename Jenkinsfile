@@ -1,6 +1,7 @@
 pipeline {
 agent any
 
+```
 environment {
     REGISTRY = "noel135/img-repo"
     REGISTRY_CREDENTIAL = "docker-credential"
@@ -41,7 +42,7 @@ stages {
         steps {
             withCredentials([
                 usernamePassword(
-                    credentialsId: 'docker-credential',
+                    credentialsId: "${REGISTRY_CREDENTIAL}",
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )
@@ -66,6 +67,27 @@ stages {
             '''
         }
     }
+	stage('Commit Deployment Update') {
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'git-credential',
+                usernameVariable: 'GIT_USER',
+                passwordVariable: 'GIT_PASS'
+            )
+        ]) {
+            sh '''
+            git config user.name "Jenkins"
+            git config user.email "jenkins@local"
+
+            git add deployment.yaml
+            git commit -m "Update image to ${BUILD_NUMBER}" || true
+
+            git push https://${GIT_USER}:${GIT_PASS}@github.com/Noel2503/jenkins-spgboot.git HEAD:main
+            '''
+        }
+    }
+}
 }
 
 post {
@@ -76,5 +98,6 @@ post {
         echo "Pipeline failed."
     }
 }
+```
 
 }
