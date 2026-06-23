@@ -1,7 +1,6 @@
 pipeline {
 agent any
 
-```
 environment {
     REGISTRY = "noel135/img-repo"
     REGISTRY_CREDENTIAL = "docker-credential"
@@ -77,6 +76,5 @@ post {
         echo "Pipeline failed."
     }
 }
-```
 
 }
