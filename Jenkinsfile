@@ -41,7 +41,7 @@ stages {
         steps {
             withCredentials([
                 usernamePassword(
-                    credentialsId: "${REGISTRY_CREDENTIAL}",
+                    credentialsId: 'docker-credential',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )
