@@ -2,7 +2,7 @@ pipeline {
 agent any
 
 environment {
-    REGISTRY = "noel135/img-repo"
+    REGISTRY = "noel135/sample"
     REGISTRY_CREDENTIAL = "docker-credential"
     DEPLOYMENT_FILE = "deployment.yaml"
 }
