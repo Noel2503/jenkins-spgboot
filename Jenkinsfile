@@ -57,7 +57,7 @@ stages {
     stage('Update Deployment YAML') {
         steps {
             sh '''
-            sed -i "s|image: noel135/img-repo:.*|image: noel135/sample:${BUILD_NUMBER}|g" ${DEPLOYMENT_FILE}
+            sed -i "s|image: noel135/sample:.*|image: noel135/sample:${BUILD_NUMBER}|g" ${DEPLOYMENT_FILE}
 
             echo "Updated deployment.yaml:"
             grep image ${DEPLOYMENT_FILE}
