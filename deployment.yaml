@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: sprgboot-tomcat
-        image: noel135/img-repo:62
+        image: noel135/img-repo:4
         imagePullPolicy: Always
 
         ports:
