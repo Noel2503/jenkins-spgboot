@@ -32,7 +32,6 @@ stages {
         steps {
             sh '''
             docker build -t ${REGISTRY}:${BUILD_NUMBER} .
-            docker tag ${REGISTRY}:${BUILD_NUMBER} ${REGISTRY}:latest
             '''
         }
     }
@@ -49,7 +48,6 @@ stages {
                 sh '''
                 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                 docker push ${REGISTRY}:${BUILD_NUMBER}
-                docker push ${REGISTRY}:latest
                 docker logout
                 '''
             }
