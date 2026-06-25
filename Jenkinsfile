@@ -82,7 +82,7 @@ stages {
             git add deployment.yaml
             git commit -m "Update image to ${BUILD_NUMBER}" || true
 
-            git push https://github.com/Noel2503/jenkins-spgboot.git HEAD:main
+            git push https://${GIT_USER}:${GIT_PASS}@github.com/Noel2503/jenkins-spgboot.git HEAD:main
             '''
         }
     }
